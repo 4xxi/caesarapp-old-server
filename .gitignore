@@ -1,3 +1,4 @@
+# IDE config
 /.idea/*
 
 # Cache and logs (Symfony2)
@@ -19,7 +20,7 @@
 
 # Parameters
 /app/config/parameters.yml
-/app/config/parameters.ini
+.env
 
 # Managed by Composer
 /app/bootstrap.php.cache
@@ -27,6 +28,7 @@
 /bin/*
 !bin/console
 !bin/symfony_requirements
+/vendor/
 
 # Assets and user uploads
 /web/bundles/
