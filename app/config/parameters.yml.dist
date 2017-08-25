@@ -8,4 +8,4 @@ parameters:
     mailer_password: ~
 
     # A secret key that's used to generate certain security-related tokens
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: Kh2bT#8djOA72BlM2$%*NJ3oaGgLUz
