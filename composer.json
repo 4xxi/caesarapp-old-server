@@ -23,6 +23,7 @@
         "php": ">=7.0",
         "alcaeus/mongo-php-adapter": "^1.1",
         "api-platform/core": "^2.0",
+        "doctrine/doctrine-migrations-bundle": "^1.0",
         "doctrine/mongodb-odm": "^1.1",
         "doctrine/mongodb-odm-bundle": "^3.0",
         "incenteev/composer-parameter-handler": "^2.0",
@@ -35,6 +36,7 @@
         "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
+        "4xxi/quality-checker": "^0.2.0",
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0"
     },
@@ -48,13 +50,22 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-install-cmd": [
-            "@symfony-scripts"
+            "@symfony-scripts",
+            "QC\\Composer\\Script\\ScriptHandler::install"
         ],
         "post-update-cmd": [
-            "@symfony-scripts"
+            "@symfony-scripts",
+            "QC\\Composer\\Script\\ScriptHandler::install"
         ]
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/4xxi/quality-checker.git"
+        }
+    ],
     "config": {
+        "bin-dir": "bin",
         "sort-packages": true
     },
     "extra": {

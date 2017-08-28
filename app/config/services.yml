@@ -33,3 +33,9 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    message.item_data_provider:
+            class: 'AppBundle\DataProvider\MessageItemDataProvider'
+            public: false
+            tags:
+                -  { name: 'api_platform.item_data_provider' }
