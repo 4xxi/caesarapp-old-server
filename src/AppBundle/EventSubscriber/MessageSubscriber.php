@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aibragimov
- * Date: 25.08.17
- * Time: 16:25.
- */
 
 namespace AppBundle\EventSubscriber;
 
@@ -15,9 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\Routing\Router;
 
 /**
- * Class MessageSubscriber.
+ * Class MessageSubscriber
+ * @package AppBundle\EventSubscriber
  */
 class MessageSubscriber implements EventSubscriberInterface
 {
@@ -25,14 +21,20 @@ class MessageSubscriber implements EventSubscriberInterface
 
     protected $dm;
 
+    protected $validator;
+
+    protected $router;
+
     /**
      * MessageSubscriber constructor.
      *
      * @param DocumentManager $documentManager
+     * @param Router $router
      */
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManager $documentManager, Router $router)
     {
         $this->dm = $documentManager;
+        $this->router = $router;
     }
 
     /**
@@ -43,7 +45,7 @@ class MessageSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => [['storeEncryptedMessage', EventPriorities::PRE_VALIDATE]],
+            KernelEvents::REQUEST => [['storeEncryptedMessage', EventPriorities::PRE_WRITE]],
         ];
     }
 
@@ -64,10 +66,11 @@ class MessageSubscriber implements EventSubscriberInterface
         $content = json_decode($event->getRequest()->getContent());
         $message = new Message();
         $message->setEncryptedMessage($content->encryptedMessage);
-        $message->setExpires(date('d-m-Y H:i:s', $content->expires));
         $message->setQueriesLimit($content->queriesLimit);
+        $message->setMinutesLimit($content->minutesLimit);
         $this->dm->persist($message);
         $this->dm->flush();
+        echo $message->getId();
 
         exit();
     }

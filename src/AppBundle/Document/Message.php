@@ -4,35 +4,57 @@ namespace AppBundle\Document;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"read"}},
+ *     "denormalization_context"={"groups"={"write"}}
+ * })
  * @MongoDB\Document(collection="message")
  */
 class Message
 {
     /**
+     * @var integer
+     *
      * @MongoDB\Id(strategy="UUID", type="string")
+     * @Groups({"read"})
      */
     private $id;
 
     /**
+     * @var string
+     *
      * @MongoDB\Field(type="string")
      * @Assert\NotBlank()
+     * @Groups({"read", "write"})
      */
     private $encryptedMessage;
 
     /**
+     * @var \DateTime
+     *
      * @MongoDB\Field(type="date")
-     * @MongoDB\Index(expireAfterSeconds="0")
-     * @Assert\NotBlank()
+     * @MongoDB\Index(name="expires", expireAfterSeconds="0")
      */
     private $expires;
 
     /**
+     * @var integer
+     *
      * @MongoDB\Field(type="int")
      * @Assert\NotBlank()
+     * @Groups({"write"})
+     */
+    private $minutesLimit;
+
+    /**
+     * @var integer
+     *
+     * @MongoDB\Field(type="int", nullable=true)
+     * @Groups({"read", "write"})
      */
     private $queriesLimit;
 
@@ -73,7 +95,7 @@ class Message
     /**
      * Set expires.
      *
-     * @param date $expires
+     * @param \DateTime $expires
      *
      * @return $this
      */
@@ -87,7 +109,7 @@ class Message
     /**
      * Get expires.
      *
-     * @return date $expires
+     * @return \DateTime $expires
      */
     public function getExpires()
     {
@@ -103,6 +125,10 @@ class Message
      */
     public function setQueriesLimit($queriesLimit)
     {
+        if (!$queriesLimit) {
+            $queriesLimit = null;
+        }
+
         $this->queriesLimit = $queriesLimit;
 
         return $this;
@@ -116,5 +142,41 @@ class Message
     public function getQueriesLimit()
     {
         return $this->queriesLimit;
+    }
+
+    /**
+     * Set minutesLimit
+     *
+     * @param int $minutesLimit
+     * @return $this
+     */
+    public function setMinutesLimit($minutesLimit)
+    {
+        $this->minutesLimit = $minutesLimit;
+        $this->setExpires(strtotime("now +{$minutesLimit} minutes"));
+
+        return $this;
+    }
+
+    /**
+     * Get minutesLimit
+     *
+     * @return int $minutesLimit
+     */
+    public function getMinutesLimit()
+    {
+        return $this->minutesLimit;
+    }
+
+    /**
+     * Decrements queriesLimit field
+     *
+     * @return $this
+     */
+    public function decrementQueriesLimit()
+    {
+        $this->queriesLimit--;
+
+        return $this;
     }
 }

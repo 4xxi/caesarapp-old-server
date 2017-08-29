@@ -23,7 +23,6 @@
         "php": ">=7.0",
         "alcaeus/mongo-php-adapter": "^1.1",
         "api-platform/core": "^2.0",
-        "doctrine/doctrine-migrations-bundle": "^1.0",
         "doctrine/mongodb-odm": "^1.1",
         "doctrine/mongodb-odm-bundle": "^3.0",
         "incenteev/composer-parameter-handler": "^2.0",

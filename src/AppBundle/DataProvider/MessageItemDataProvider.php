@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aibragimov
- * Date: 25.08.17
- * Time: 15:51.
- */
 
 namespace AppBundle\DataProvider;
 
@@ -12,9 +6,11 @@ use AppBundle\Document\Message;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class MessageItemDataProvider.
+ * Class MessageItemDataProvider
+ * @package AppBundle\DataProvider
  */
 final class MessageItemDataProvider implements ItemDataProviderInterface
 {
@@ -47,8 +43,25 @@ final class MessageItemDataProvider implements ItemDataProviderInterface
         if (Message::class !== $resourceClass) {
             throw new ResourceClassNotSupportedException();
         }
+
         $message = $this->dm->getRepository('AppBundle:Message')->findOneBy(['id' => $id]);
 
-        return $message;
+        if (!$message) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($message->getQueriesLimit()) {
+            $message->decrementQueriesLimit();
+            $this->dm->flush($message);
+        }
+
+        if ($message->getQueriesLimit() === 0) {
+            $this->dm->remove($message);
+            $this->dm->flush();
+        }
+
+        dump($message);
+
+        exit();
     }
 }
