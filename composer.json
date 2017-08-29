@@ -1,6 +1,7 @@
 {
-    "name": "aibragimov/.",
-    "license": "proprietary",
+    "name": "4xxi/caesarapp-server",
+    "description": "Server API for CaesarApp",
+    "license": "GPL-3.0",
     "type": "project",
     "autoload": {
         "psr-4": {
