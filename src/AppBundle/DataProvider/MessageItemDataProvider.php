@@ -60,8 +60,6 @@ final class MessageItemDataProvider implements ItemDataProviderInterface
             $this->dm->flush();
         }
 
-        dump($message);
-
-        exit();
+        return $message;
     }
 }

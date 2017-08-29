@@ -2,16 +2,11 @@
 
 namespace AppBundle\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"read"}},
- *     "denormalization_context"={"groups"={"write"}}
- * })
  * @MongoDB\Document(collection="message")
  */
 class Message
@@ -20,7 +15,6 @@ class Message
      * @var integer
      *
      * @MongoDB\Id(strategy="UUID", type="string")
-     * @Groups({"read"})
      */
     private $id;
 
@@ -29,6 +23,7 @@ class Message
      *
      * @MongoDB\Field(type="string")
      * @Assert\NotBlank()
+     * @Assert\Type("string")
      * @Groups({"read", "write"})
      */
     private $encryptedMessage;
@@ -46,6 +41,7 @@ class Message
      *
      * @MongoDB\Field(type="int")
      * @Assert\NotBlank()
+     * @Assert\Type("int")
      * @Groups({"write"})
      */
     private $minutesLimit;
@@ -53,8 +49,9 @@ class Message
     /**
      * @var integer
      *
-     * @MongoDB\Field(type="int", nullable=true)
-     * @Groups({"read", "write"})
+     * @MongoDB\Field(type="int")
+     * @Assert\Type("int")
+     * @Groups({"write"})
      */
     private $queriesLimit;
 

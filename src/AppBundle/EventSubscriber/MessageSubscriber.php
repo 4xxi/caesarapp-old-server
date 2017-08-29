@@ -58,5 +58,9 @@ class MessageSubscriber implements EventSubscriberInterface
 
         $this->dm->persist($message);
         $this->dm->flush();
+
+        echo $message->getId();
+
+        exit();
     }
 }
