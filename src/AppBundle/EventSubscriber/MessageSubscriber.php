@@ -6,35 +6,28 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use AppBundle\Document\Message;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Symfony\Component\Routing\Router;
 
 /**
  * Class MessageSubscriber
- * @package AppBundle\EventSubscriber
  */
 class MessageSubscriber implements EventSubscriberInterface
 {
-    const GET_URI = '/api/messages';
-
+    /**
+     * @var DocumentManager
+     */
     protected $dm;
-
-    protected $validator;
-
-    protected $router;
 
     /**
      * MessageSubscriber constructor.
      *
      * @param DocumentManager $documentManager
-     * @param Router $router
      */
-    public function __construct(DocumentManager $documentManager, Router $router)
+    public function __construct(DocumentManager $documentManager)
     {
         $this->dm = $documentManager;
-        $this->router = $router;
     }
 
     /**
@@ -45,33 +38,25 @@ class MessageSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => [['storeEncryptedMessage', EventPriorities::PRE_WRITE]],
+            KernelEvents::VIEW => [['storeEncryptedMessage', EventPriorities::PRE_WRITE]],
         ];
     }
 
     /**
      * Stores encrypted message into DB.
      *
-     * @param GetResponseEvent $event
+     * @param GetResponseForControllerResultEvent $event
      */
-    public function storeEncryptedMessage(GetResponseEvent $event)
+    public function storeEncryptedMessage(GetResponseForControllerResultEvent $event)
     {
-        $uri = $event->getRequest()->getRequestUri();
+        $message = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if (($uri !== self::GET_URI) || ($method !== Request::METHOD_POST)) {
+        if (!$message instanceof Message || Request::METHOD_POST !== $method) {
             return;
         }
 
-        $content = json_decode($event->getRequest()->getContent());
-        $message = new Message();
-        $message->setEncryptedMessage($content->encryptedMessage);
-        $message->setQueriesLimit($content->queriesLimit);
-        $message->setMinutesLimit($content->minutesLimit);
         $this->dm->persist($message);
         $this->dm->flush();
-        echo $message->getId();
-
-        exit();
     }
 }
