@@ -3,6 +3,7 @@
 /app/logs/*
 !app/cache/.gitkeep
 !app/logs/.gitkeep
+.php_cs.cache
 
 # Email spool folder
 /app/spool/*
@@ -40,3 +41,5 @@
 
 # Backup entities generated with doctrine:generate:entities command
 **/Entity/*~
+
+\.idea/

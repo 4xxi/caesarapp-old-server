@@ -1,0 +1,22 @@
+suites:
+    pre-commit:
+        phpmd:
+            type: 'phpmd'
+            enabled: true
+            options: ~
+        phpcs_symfony:
+            type: 'phpcs'
+            enabled: true
+            options:
+                standard: 'vendor/escapestudios/symfony2-coding-standard/Symfony2'
+        phplint:
+            type: 'custom'
+            enabled: true
+            options:
+                cmd: 'php -l {path}'
+    fix:
+        phpcs_fixer:
+            type: 'phpcs-fixer'
+            enabled: true
+            options:
+                rules: '@Symfony'
