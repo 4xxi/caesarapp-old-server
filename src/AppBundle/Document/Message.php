@@ -15,6 +15,7 @@ class Message
      * @var integer
      *
      * @MongoDB\Id(strategy="UUID", type="string")
+     * @Groups({"read"})
      */
     private $id;
 

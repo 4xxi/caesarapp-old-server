@@ -43,8 +43,6 @@ class MessageSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Stores encrypted message into DB.
-     *
      * @param GetResponseForControllerResultEvent $event
      */
     public function storeEncryptedMessage(GetResponseForControllerResultEvent $event)
@@ -58,9 +56,5 @@ class MessageSubscriber implements EventSubscriberInterface
 
         $this->dm->persist($message);
         $this->dm->flush();
-
-        echo $message->getId();
-
-        exit();
     }
 }
