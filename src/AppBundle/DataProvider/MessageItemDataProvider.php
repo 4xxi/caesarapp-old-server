@@ -14,6 +14,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 final class MessageItemDataProvider implements ItemDataProviderInterface
 {
+    /**
+     * @var DocumentManager
+     */
     private $dm;
 
     /**

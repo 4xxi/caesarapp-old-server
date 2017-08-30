@@ -40,7 +40,6 @@ class Message
     /**
      * @var integer
      *
-     * @MongoDB\Field(type="int")
      * @Assert\NotBlank()
      * @Assert\Type("int")
      * @Groups({"write"})
