@@ -19,6 +19,9 @@ class MessageControllerTest extends WebTestCase
     /** @var  DocumentManager */
     protected $dm;
 
+    /**
+     * Set up initial preferences
+     */
     public function setUp()
     {
         self::bootKernel();
@@ -42,6 +45,46 @@ class MessageControllerTest extends WebTestCase
         $client->request('GET', "/api/messages/{$message->getId()}", [], [], self::HEADERS);
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($message->getEncryptedMessage(),$response->encryptedMessage);
+    }
+
+    /**
+     * Tests queries limit for getting encrypted message
+     */
+    public function testQueriesLimit()
+    {
+        $message = new Message();
+        $message->setExpires(strtotime("now + 30 minutes"));
+        $message->setQueriesLimit('5');
+        $message->setEncryptedMessage("Some encrypted Message");
+        $this->dm->persist($message);
+        $this->dm->flush();
+        $client = static::CreateClient();
+        for ($queryCounter = 1; $queryCounter <= 6; $queryCounter++) {
+            $client->request('GET', "/api/messages/{$message->getId()}", [], [], self::HEADERS);
+            if ($queryCounter == 6) {
+                $this->assertEquals(404, $client->getResponse()->getStatusCode());
+            } else {
+                $response = json_decode($client->getResponse()->getContent());
+                $this->assertEquals($message->getEncryptedMessage(), $response->encryptedMessage);
+            }
+        }
+    }
+
+    /**
+     * Tests minutes limit for getting encrypted message
+     */
+    public function testMinutesLimit()
+    {
+        $message = new Message();
+        $message->setExpires(strtotime("now + 1 minutes"));
+        $message->setQueriesLimit('30');
+        $message->setEncryptedMessage("Some encrypted Message");
+        $this->dm->persist($message);
+        $this->dm->flush();
+        sleep(120); //By Default, the TTLMonitor thread runs once in every 60 seconds. That's why we need 1 min more.
+        $client = static::CreateClient();
+        $client->request('GET', "/api/messages/{$message->getId()}", [], [], self::HEADERS);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     /**
@@ -137,6 +180,25 @@ class MessageControllerTest extends WebTestCase
         $response = get_object_vars(json_decode($client->getResponse()->getContent()));
         $this->assertEquals(
             'The type of the "minutesLimit" attribute must be "int", "string" given.',
+            $response['hydra:description']
+        );
+    }
+
+    /**
+     * Tests storing encrypted message with "minutesLimit" field value = 0.5.
+     */
+    public function testStoreEncryptedMessageWithTypeMinutesLimitFloatValue()
+    {
+        $client = static::CreateClient();
+        $content = json_encode([
+            'encryptedMessage' => 'Test Message',
+            'minutesLimit' => 0.5,
+            'queriesLimit' => 20,
+        ]);
+        $client->request('POST', self::ADD_ENCRYPTED_MESSAGE_URL, [], [], self::HEADERS, $content);
+        $response = get_object_vars(json_decode($client->getResponse()->getContent()));
+        $this->assertEquals(
+            'The type of the "minutesLimit" attribute must be "int", "double" given.',
             $response['hydra:description']
         );
     }
