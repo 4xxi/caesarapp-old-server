@@ -10,6 +10,8 @@ class MessageControllerTest extends WebTestCase
 {
     const ADD_ENCRYPTED_MESSAGE_URL = '/api/messages';
 
+    const MONGO_TTL_MONITOR_SLEEP_SEC = 60;
+
     const HEADERS = [
         'CONTENT_TYPE' => 'application/ld+json',
         'ACCEPT' => 'application/ld+json',
@@ -36,13 +38,13 @@ class MessageControllerTest extends WebTestCase
     public function testGetEncryptedMessage()
     {
         $message = new Message();
-        $message->setExpires(strtotime("now + 30 minutes"));
-        $message->setQueriesLimit('30');
-        $message->setEncryptedMessage("Some encrypted Message");
+        $message->setExpires(strtotime('now + 30 minutes'));
+        $message->setQueriesLimit(30);
+        $message->setEncryptedMessage('Some encrypted Message');
         $this->dm->persist($message);
         $this->dm->flush();
         $client = static::CreateClient();
-        $client->request('GET', "/api/messages/{$message->getId()}", [], [], self::HEADERS);
+        $client->request('GET', '/api/messages/'.$message->getId(), [], [], self::HEADERS);
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($message->getEncryptedMessage(),$response->encryptedMessage);
     }
@@ -53,19 +55,19 @@ class MessageControllerTest extends WebTestCase
     public function testQueriesLimit()
     {
         $message = new Message();
-        $message->setExpires(strtotime("now + 30 minutes"));
-        $message->setQueriesLimit('5');
-        $message->setEncryptedMessage("Some encrypted Message");
+        $message->setExpires(strtotime('now + 30 minutes'));
+        $message->setQueriesLimit(5);
+        $message->setEncryptedMessage('Some encrypted Message');
         $this->dm->persist($message);
         $this->dm->flush();
         $client = static::CreateClient();
-        for ($queryCounter = 1; $queryCounter <= 6; $queryCounter++) {
-            $client->request('GET', "/api/messages/{$message->getId()}", [], [], self::HEADERS);
-            if ($queryCounter == 6) {
-                $this->assertEquals(404, $client->getResponse()->getStatusCode());
-            } else {
+        for ($queryCounter = 1; $queryCounter < 6; $queryCounter++) {
+            $client->request('GET', '/api/messages/'.$message->getId(), [], [], self::HEADERS);
+            if ($queryCounter < 6) {
                 $response = json_decode($client->getResponse()->getContent());
                 $this->assertEquals($message->getEncryptedMessage(), $response->encryptedMessage);
+            } else {
+                $this->assertEquals(404, $client->getResponse()->getStatusCode());
             }
         }
     }
@@ -75,15 +77,16 @@ class MessageControllerTest extends WebTestCase
      */
     public function testMinutesLimit()
     {
+        $ttlInSeconds = 60;
         $message = new Message();
-        $message->setExpires(strtotime("now + 1 minutes"));
-        $message->setQueriesLimit('30');
-        $message->setEncryptedMessage("Some encrypted Message");
+        $message->setExpires('now + '.$ttlInSeconds.' seconds');
+        $message->setQueriesLimit(30);
+        $message->setEncryptedMessage('Some encrypted Message');
         $this->dm->persist($message);
         $this->dm->flush();
-        sleep(120); //By Default, the TTLMonitor thread runs once in every 60 seconds. That's why we need 1 min more.
+        time_sleep_until(strtotime('now + '.($ttlInSeconds + self::MONGO_TTL_MONITOR_SLEEP_SEC).' seconds'));
         $client = static::CreateClient();
-        $client->request('GET', "/api/messages/{$message->getId()}", [], [], self::HEADERS);
+        $client->request('GET', '/api/messages/'.$message->getId(), [], [], self::HEADERS);
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
