@@ -38,7 +38,8 @@
         "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
-        "4xxi/quality-checker": "^0.2.0",
+        "phpunit/phpunit": "^6.3",
+        "sebastian/diff": "2.0.1",
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0"
     },
