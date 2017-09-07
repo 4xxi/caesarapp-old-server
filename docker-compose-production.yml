@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+  appclient:
+    image: 4xxi/caesarapp-web-client
+    depends_on:
+      - "web"
+    environment:
+      PORT: "${CLIENT_HTTP_PORT}"
+      BASE_API_URL: "http://localhost:${HTTP_PORT}"
+      NODE_ENV: production
+    ports:
+      - "${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}" 
+  web:
+    environment:
+      SYMFONY_ENV: prod
+  nginx:
+    environment:
+      SYMFONY_ENV: prod
+    volumes:
+      - ./nginx/symfony.conf:/etc/nginx/sites-available/symfony.conf
