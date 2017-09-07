@@ -17,7 +17,7 @@ services:
       MONGODB_HOST: "${MONGODB_HOST}"
       MONGODB_PORT: "${MONGODB_PORT}"
       CLIENT_ORIGIN : "${CLIENT_ORIGIN}"
-   nginx:
+  nginx:
     image: 4xxi/nginx
     depends_on:
       - web
