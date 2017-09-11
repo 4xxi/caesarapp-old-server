@@ -7,15 +7,15 @@ services:
       - "web"
     environment:
       PORT: "${CLIENT_HTTP_PORT}"
-      BASE_API_URL: "http://localhost1:${HTTP_PORT}"
+      BASE_API_URL: "${BASE_API_URL}"
       NODE_ENV: production
     ports:
       - "${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}"
   web:
     environment:
-      SYMFONY_ENV: prod
+      SYMFONY_ENV: ${ENV}
   nginx:
     environment:
-      SYMFONY_ENV: prod
+      SYMFONY_ENV: ${ENV}
     volumes:
       - ./nginx/symfony.conf:/etc/nginx/sites-available/symfony.conf
