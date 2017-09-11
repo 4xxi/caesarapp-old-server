@@ -1,4 +1,4 @@
-version: '3.3'
+version: '2.0'
 
 services:
   appclient:
@@ -7,10 +7,10 @@ services:
       - "web"
     environment:
       PORT: "${CLIENT_HTTP_PORT}"
-      BASE_API_URL: "http://localhost:${HTTP_PORT}"
+      BASE_API_URL: "http://localhost1:${HTTP_PORT}"
       NODE_ENV: production
     ports:
-      - "${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}" 
+      - "${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}"
   web:
     environment:
       SYMFONY_ENV: prod
@@ -19,3 +19,4 @@ services:
       SYMFONY_ENV: prod
     volumes:
       - ./nginx/symfony.conf:/etc/nginx/sites-available/symfony.conf
+    entrypoint: ${WWW_DIR}/run_nginx.sh
