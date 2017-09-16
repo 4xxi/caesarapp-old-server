@@ -1,0 +1,13 @@
+version: '2.0'
+
+services:
+  appclient:
+    image: 4xxi/caesarapp-web-client
+    depends_on:
+      - web
+    environment:
+      PORT: "${CLIENT_HTTP_PORT}"
+      BASE_API_URL: "${BASE_API_URL}"
+      NODE_ENV: ${ENV}
+    ports:
+      - "${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}"
