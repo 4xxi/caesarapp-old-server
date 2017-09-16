@@ -1,6 +1,7 @@
 parameters:
     mongodb_server: "mongodb://%env(MONGODB_HOST)%:%env(MONGODB_PORT)%"
     mongodb_database: '%env(MONGODB_DATABASE)%'
+    client_origin: '%env(CLIENT_ORIGIN)%'
 
     mailer_transport: smtp
     mailer_host: 127.0.0.1
