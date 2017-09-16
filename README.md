@@ -1,6 +1,6 @@
 # caesarapp-server
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/55b5e122-1861-4757-bc92-10f4269ea6a3/big.png)](https://insight.sensiolabs.com/projects/55b5e122-1861-4757-bc92-10f4269ea6a3)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/e8645e79-1ae2-490c-8a03-fe919a80929a/big.png)](https://insight.sensiolabs.com/projects/e8645e79-1ae2-490c-8a03-fe919a80929a)
 
 ==========
 ## Setup

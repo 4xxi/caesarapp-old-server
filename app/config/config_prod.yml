@@ -33,7 +33,7 @@ nelmio_cors:
         forced_allow_origin_value: ~
     paths:
         '^/api/':
-            allow_origin: ['%env(CLIENT_ORIGIN)%']
+            allow_origin: ['%client_origin%']
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
             max_age: 3600
