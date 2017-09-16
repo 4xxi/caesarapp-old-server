@@ -1,0 +1,13 @@
+resources:
+    AppBundle\Document\Message:
+        itemOperations:
+            get:
+                method: 'GET'
+        collectionOperations:
+            post:
+                method: 'POST'
+        attributes:
+            normalization_context:
+                groups: ["read"]
+            denormalization_context:
+                groups: ["write"]

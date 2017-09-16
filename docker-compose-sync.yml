@@ -1,0 +1,16 @@
+version: '2.0'
+
+services:
+  web:
+    volumes:
+      - ./composer.json:${WWW_DIR}/composer.json
+      - ./composer.lock:${WWW_DIR}/composer.lock
+      - source-data:${WWW_DIR}:nocopy
+  nginx:
+    volumes:
+      - source-data:${WWW_DIR}
+
+volumes:
+  source-data:
+    external:
+      name: "caesar-source-data-unison-sync"

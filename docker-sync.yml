@@ -1,0 +1,19 @@
+version: "2"
+
+options:
+    compose-dev-file-path: 'docker-compose-sync.yml'
+
+syncs:
+  #IMPORTANT: ensure this name is unique and does not match your other application container name
+  caesar-source-data-unison-sync: # tip: add -sync and you keep consistent names als a convention
+    src: './'
+    host_disk_mount_mode: 'cached'
+    sync_excludes:
+      - '.git'
+      - '.gitignore'
+      - '.idea'
+      - 'docker-compose.yml'
+      - 'parameters.yml'
+      - 'var/bootstrap.php.cache'
+      - 'var/cache/*'
+      - 'var/sessions/*'
