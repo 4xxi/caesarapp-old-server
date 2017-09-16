@@ -1,4 +1,4 @@
-version: '3.3'
+version: '2.0'
 
 services:
   web:
@@ -17,6 +17,7 @@ services:
       MONGODB_HOST: "${MONGODB_HOST}"
       MONGODB_PORT: "${MONGODB_PORT}"
       CLIENT_ORIGIN : "${CLIENT_ORIGIN}"
+      SYMFONY_ENV: ${ENV}
   nginx:
     image: 4xxi/nginx
     depends_on:
@@ -25,8 +26,10 @@ services:
       - ./var/logs:/var/log/nginx
       - .:${WWW_DIR}
     ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+      - "${SERVER_HTTP_PORT}:80"
+    environment:
+      WWW_DIR: ${WWW_DIR}
+      SYMFONY_ENV: ${ENV}
   mongodb:
     image: 4xxi/mongodb:latest
     volumes:
