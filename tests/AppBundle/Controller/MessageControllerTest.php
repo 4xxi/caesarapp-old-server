@@ -79,7 +79,7 @@ class MessageControllerTest extends WebTestCase
     {
         $ttlInSeconds = 10;
         $message = new Message();
-        $message->setExpires('now + '.$ttlInSeconds.' seconds');
+        $message->setExpires(strtotime('now + '.$ttlInSeconds.' seconds'));
         $message->setQueriesLimit(3);
         $message->setEncryptedMessage('Some encrypted Message');
         $this->dm->persist($message);
@@ -165,7 +165,7 @@ class MessageControllerTest extends WebTestCase
         $client->request('POST', self::ADD_ENCRYPTED_MESSAGE_URL, [], [], self::HEADERS, $content);
         $response = get_object_vars(json_decode($client->getResponse()->getContent()));
         $this->assertEquals(
-            'encryptedMessage: This value should be of type string.',
+            'The type of the "encryptedMessage" attribute must be "string", "integer" given.',
             $response['hydra:description']
         );
     }
@@ -184,7 +184,7 @@ class MessageControllerTest extends WebTestCase
         $client->request('POST', self::ADD_ENCRYPTED_MESSAGE_URL, [], [], self::HEADERS, $content);
         $response = get_object_vars(json_decode($client->getResponse()->getContent()));
         $this->assertEquals(
-            'minutesLimit: This value should be of type int.',
+            'The type of the "minutesLimit" attribute must be "int", "string" given.',
             $response['hydra:description']
         );
     }
@@ -203,7 +203,7 @@ class MessageControllerTest extends WebTestCase
         $client->request('POST', self::ADD_ENCRYPTED_MESSAGE_URL, [], [], self::HEADERS, $content);
         $response = get_object_vars(json_decode($client->getResponse()->getContent()));
         $this->assertEquals(
-            'minutesLimit: This value should be of type int.',
+            'The type of the "minutesLimit" attribute must be "int", "double" given.',
             $response['hydra:description']
         );
     }
@@ -222,7 +222,7 @@ class MessageControllerTest extends WebTestCase
         $client->request('POST', self::ADD_ENCRYPTED_MESSAGE_URL, [], [], self::HEADERS, $content);
         $response = get_object_vars(json_decode($client->getResponse()->getContent()));
         $this->assertEquals(
-            'queriesLimit: This value should be of type int.',
+            'The type of the "queriesLimit" attribute must be "int", "string" given.',
             $response['hydra:description']
         );
     }
