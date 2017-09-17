@@ -1,7 +1,6 @@
 # caesarapp-server
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/e8645e79-1ae2-490c-8a03-fe919a80929a/big.png)](https://insight.sensiolabs.com/projects/e8645e79-1ae2-490c-8a03-fe919a80929a)
-
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/3faba81b-8c9b-4f0c-aeef-b4ef741ac784/mini.png)](https://insight.sensiolabs.com/projects/3faba81b-8c9b-4f0c-aeef-b4ef741ac784)
 [![CircleCI](https://circleci.com/gh/4xxi/caesarapp-server/tree/master.svg?style=svg)](https://circleci.com/gh/4xxi/caesarapp-server/tree/master)
 
 ==========
