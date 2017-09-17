@@ -33,7 +33,7 @@ class Message
      * @var \DateTime
      *
      * @MongoDB\Field(type="date")
-     * @MongoDB\Index(name="expires", expireAfterSeconds="0")
+     * @MongoDB\Index(name="expires", expireAfterSeconds=0)
      */
     private $expires;
 

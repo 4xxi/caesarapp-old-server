@@ -6,15 +6,11 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/php:7.1.5-browsers
+      - image: 4xxi/php-mongo
+      - image: 4xxi/nginx
+      - image: 4xxi/mongodb:latest
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mysql:9.4
-
-    working_directory: ~/repo
+    working_directory: $WWW_DIR
 
     steps:
       - checkout
@@ -22,16 +18,24 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "composer.json" }}
+          - deps1-{{ .Branch }}-{{ checksum "composer.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: composer install -n --prefer-dist
+      - run:
+          name: Install Composer Dependencies
+          command: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
 
       - save_cache:
           paths:
             - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+          key: deps1-{{ .Branch }}-{{ checksum "composer.json" }}
+
+      - run:
+          name: Migrations
+          command: |
+            bin/console doctrine:mongodb:schema:update -e prod
 
       # run tests!
-      - run: phpunit
+      - run: bin/phpunit
