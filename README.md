@@ -2,6 +2,8 @@
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/e8645e79-1ae2-490c-8a03-fe919a80929a/big.png)](https://insight.sensiolabs.com/projects/e8645e79-1ae2-490c-8a03-fe919a80929a)
 
+[![CircleCI](https://circleci.com/gh/4xxi/caesarapp-server/tree/master.svg?style=svg)](https://circleci.com/gh/4xxi/caesarapp-server/tree/master)
+
 ==========
 ## Setup
 ### Linux/Windows/MacOS
