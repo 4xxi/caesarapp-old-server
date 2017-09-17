@@ -77,14 +77,16 @@ class MessageControllerTest extends WebTestCase
      */
     public function testMinutesLimit()
     {
-        $ttlInSeconds = 60;
+        $ttlInSeconds = 10;
         $message = new Message();
-        $message->setExpires('now + '.$ttlInSeconds.' seconds');
-        $message->setQueriesLimit(30);
+        $message->setExpires(strtotime('now + '.$ttlInSeconds.' seconds'));
+        $message->setQueriesLimit(3);
         $message->setEncryptedMessage('Some encrypted Message');
         $this->dm->persist($message);
         $this->dm->flush();
-        time_sleep_until(strtotime('now + '.($ttlInSeconds + self::MONGO_TTL_MONITOR_SLEEP_SEC).' seconds'));
+
+        sleep($ttlInSeconds + self::MONGO_TTL_MONITOR_SLEEP_SEC);
+
         $client = static::CreateClient();
         $client->request('GET', '/api/messages/'.$message->getId(), [], [], self::HEADERS);
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
