@@ -2,6 +2,7 @@ version: "2"
 
 options:
     compose-dev-file-path: 'docker-compose-sync.yml'
+    max_attempt: 100
 
 syncs:
   #IMPORTANT: ensure this name is unique and does not match your other application container name
