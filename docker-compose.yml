@@ -2,16 +2,14 @@ version: '2.0'
 
 services:
   web:
-    image: 4xxi/php-mongo
-    volumes:
-      - .:${WWW_DIR}
+    image: 4xxi/caesarapp-server
     depends_on:
       - "mongodb"
     expose:
       - "9000"
     links:
       - mongodb
-    entrypoint: ${WWW_DIR}/docker-entrypoint.sh
+    entrypoint: ${WWW_DIR}/entrypoint.sh
     environment:
       MONGODB_DATABASE: "${MONGODB_DATABASE}"
       MONGODB_HOST: "${MONGODB_HOST}"
